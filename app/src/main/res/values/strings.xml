@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">MyExpenses</string>
+    <string name="action_settings">Settings</string>
+    <string name="month_expences">Month Expenses</string>
+    <string name="title_activity_add_expense">addExpense</string>
+    <string name="add_expense_label_title">Label:</string>
+    <string name="add_expense_title">Add Expense</string>
+    <string name="add_expense_category_title">Category: </string>
+    <string name="add_expense_cost_title">Cost: </string>
+    <string name="add_expense_paid_title">Paid:</string>
+    <string name="add_expense_date_title">Due date:</string>
+    <string name="add_expense_confirm_title">Confirm</string>
+    <string name="add_expense_cancel_title">Cancel</string>
+    <string name="hint_label">label</string>
+    <string name="save_successful">Expense saved</string>
+    <string name="label_must_be_filled">Label Missing</string>
+    <string name="category_must_be_filled">category missing</string>
+    <string name="cost_must_be_filled">cost missing</string>
+    <string name="date_due_must_be_filled">date due missing</string>
+
+    <string-array name="expense_category">
+        <item>Investment</item>
+        <item>Bill</item>
+        <item>Enjoy</item>
+        <item>Vehicle</item>
+    </string-array>
+    <string name="title_activity_expense_card_view_details">ExpenseCardViewDetails</string>
+    <string name="detail_expense_title">Expense Details</string>
+    <string name="update_successful">Expense updated</string>
+    <string name="add_expense_delete_title">Delete</string>
+    <string name="expense_deleted">Expense deleted</string>
+    <string name="delete_expense_alert_dialog_title">Delete expense ?</string>
+    <string name="operation_cannot_be_undone">Operation cannot be undone</string>
+    <string name="yes">yes</string>
+    <string name="cancel">cancel</string>
+    <string name="total_expenses_cost_title">Total expenses cost: </string>
+    <string name="left_to_pay_title">Expenses left to pay: </string>
+    <string name="change_salary">change salary</string>
+    <string name="about">about</string>
+    <string name="ok">ok</string>
+    <string name="designByFlatIcon">Icons Design from Flaticon</string>
+    <string name="salary">salary:</string>
+</resources>
