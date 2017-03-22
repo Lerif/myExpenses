@@ -75,21 +75,12 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
 
-        setExpensesView();
-
-        // Specifying adapter
-        mRecyclerAdapter = new ExpenseAdapter(expenses, MainActivity.this);
-        mRecyclerView.setAdapter(mRecyclerAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-    }
-
-    private void setExpensesView() {
         double totalExpenseCost = 0;
         double totalLeftPayment = 0;
 
         sharedPreferences = getSharedPreferences(PERSONAL_SHARED_PREFERENCES_FILE_NAME,
                 MODE_PRIVATE);
-        float leftSalary = sharedPreferences.getFloat(SALARY_INCOME_KEY, NO_SALARY_SAVED);
+        float totalSalary = sharedPreferences.getFloat(SALARY_INCOME_KEY, NO_SALARY_SAVED);
 
         expenses = db.getAllExpenses();
 
@@ -98,11 +89,19 @@ public class MainActivity extends AppCompatActivity {
 
             // Get all non paid expenses
             totalLeftPayment += (!expense.isWasItPaid()) ? expense.getCost(): 0;
+            float percentage = ((float)expense.getCost() / totalSalary) *100;
+            expense.setPercentageOfTotalSalary(percentage);
         }
 
         this.totalLeftPayment.setText(String.format("%.2f", totalLeftPayment));
         this.totalExpenseCost.setText(String.format("%.2f ",totalExpenseCost));
-        this.leftSalary.setText(String.format("%.2f", (leftSalary - totalExpenseCost)));
+        this.leftSalary.setText(String.format("%.2f", (totalSalary - totalExpenseCost)));
+
+
+        // Specifying adapter
+        mRecyclerAdapter = new ExpenseAdapter(expenses, MainActivity.this);
+        mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
