@@ -40,4 +40,8 @@
     <string name="ok">ok</string>
     <string name="designByFlatIcon">Icons Design from Flaticon</string>
     <string name="salary">salary:</string>
+    <string name="insert_salary">Insira Salario</string>
+    <string name="salary_saved">Salary saved</string>
+    <string name="total_salary_left_title">Left after all expenses paid:</string>
+    <string name="salary_not_saved">Salary invalid</string>
 </resources>

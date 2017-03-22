@@ -1,6 +1,7 @@
 package com.industries.shins.myexpenses;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,10 @@ import com.industries.shins.myexpenses.repository.ExpenseDataBase;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.NO_SALARY_SAVED;
+import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.PERSONAL_SHARED_PREFERENCES_FILE_NAME;
+import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.SALARY_INCOME_KEY;
+
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;      // Handler
@@ -31,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private List<Expense> expenses = new ArrayList<Expense>();
     private TextView totalExpenseCost;
     private TextView totalLeftPayment;
+    private TextView leftSalary;
     private ExpenseDataBase db;
+    private  SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         totalExpenseCost = (TextView) findViewById(R.id.total_expense_cost);
         totalLeftPayment = (TextView) findViewById(R.id.total_left_payment);
+        leftSalary = (TextView) findViewById(R.id.total_salary_left);
 
         FloatingActionButton newExpenseBtn = (FloatingActionButton) findViewById(R.id.add_expense);
         newExpenseBtn.setOnClickListener(new View.OnClickListener() {
@@ -66,8 +74,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+
+        setExpensesView();
+
+        // Specifying adapter
+        mRecyclerAdapter = new ExpenseAdapter(expenses, MainActivity.this);
+        mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private void setExpensesView() {
         double totalExpenseCost = 0;
         double totalLeftPayment = 0;
+
+        sharedPreferences = getSharedPreferences(PERSONAL_SHARED_PREFERENCES_FILE_NAME,
+                MODE_PRIVATE);
+        float leftSalary = sharedPreferences.getFloat(SALARY_INCOME_KEY, NO_SALARY_SAVED);
+
         expenses = db.getAllExpenses();
 
         for(Expense expense : expenses){
@@ -79,11 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.totalLeftPayment.setText(String.format("%.2f", totalLeftPayment));
         this.totalExpenseCost.setText(String.format("%.2f ",totalExpenseCost));
-
-        // Specifying adapter
-        mRecyclerAdapter = new ExpenseAdapter(expenses, MainActivity.this);
-        mRecyclerView.setAdapter(mRecyclerAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        this.leftSalary.setText(String.format("%.2f", (leftSalary - totalExpenseCost)));
     }
 
     @Override
@@ -103,9 +122,7 @@ public class MainActivity extends AppCompatActivity {
         switch (id){
             case R.id.action_change_salary:{
                 DialogMessage dialogMessage = new DialogMessage();
-                AlertDialog.Builder alertDialog = dialogMessage.alertSalary(R.string.change_salary,
-                        0, MainActivity.this);
-                alertDialog.show();
+                dialogMessage.insertSalary(R.string.salary, sharedPreferences, MainActivity.this);
                 break;
             }
 
@@ -119,5 +136,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
