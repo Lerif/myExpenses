@@ -43,7 +43,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter{
         expenseViewHolder.category.setText(expense.getCategory());
         expenseViewHolder.dateDue.setText(DUE_DATE + expense.getDueDate());
         expenseViewHolder.cost.setText(String.format("%.2f ",expense.getCost()));
-        expenseViewHolder.percentage.setText(expense.getPercentageOfTotalSalary()+"");
+        expenseViewHolder.percentage.setText(String.format("%.2f",expense.getPercentageOfTotalSalary()));
+        expenseViewHolder.percentage.append("%");
+
 
         // To compare dates parsing string to date format
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
