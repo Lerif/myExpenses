@@ -42,7 +42,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter{
         expenseViewHolder.label.setText(expense.getLabel());
         expenseViewHolder.category.setText(expense.getCategory());
         expenseViewHolder.dateDue.setText(DUE_DATE + expense.getDueDate());
-        expenseViewHolder.cost.setText(String.format("%.2f ",expense.getCost()));
+        expenseViewHolder.cost.setText(R.string.currency);
+        expenseViewHolder.cost.append(String.format(" %.2f ",expense.getCost()));
         expenseViewHolder.percentage.setText(String.format("%.2f",expense.getPercentageOfTotalSalary()));
         expenseViewHolder.percentage.append("%");
 

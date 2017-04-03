@@ -2,6 +2,7 @@ package com.industries.shins.myexpenses;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView totalLeftPayment;
     private TextView leftSalary;
     private ExpenseDataBase db;
-    private  SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         double totalExpenseCost = 0;
         double totalLeftPayment = 0;
+        double leftSalary;
 
         sharedPreferences = getSharedPreferences(PERSONAL_SHARED_PREFERENCES_FILE_NAME,
                 MODE_PRIVATE);
@@ -93,10 +95,18 @@ public class MainActivity extends AppCompatActivity {
             expense.setPercentageOfTotalSalary(percentage);
         }
 
+        leftSalary = totalSalary - totalExpenseCost;
+
         this.totalLeftPayment.setText(String.format("%.2f", totalLeftPayment));
         this.totalExpenseCost.setText(String.format("%.2f ",totalExpenseCost));
-        this.leftSalary.setText(String.format("%.2f", (totalSalary - totalExpenseCost)));
 
+        if(leftSalary > 0) {
+            this.leftSalary.setTextColor(Color.GREEN);
+        }
+        else{
+            this.leftSalary.setTextColor(Color.RED);
+        }
+        this.leftSalary.setText(String.format("%.2f", leftSalary));
 
         // Specifying adapter
         mRecyclerAdapter = new ExpenseAdapter(expenses, MainActivity.this);

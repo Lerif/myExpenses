@@ -42,6 +42,7 @@
     <string name="salary">salary:</string>
     <string name="insert_salary">Insira Salario</string>
     <string name="salary_saved">Salary saved</string>
-    <string name="total_salary_left_title">Left after all expenses paid:</string>
+    <string name="total_salary_left_title">Left:</string>
     <string name="salary_not_saved">Salary invalid</string>
+    <string name="currency">R$</string>
 </resources>

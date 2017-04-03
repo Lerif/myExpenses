@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.industries.shins.myexpenses.R;
 
-import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.PERSONAL_SHARED_PREFERENCES_FILE_NAME;
 import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.SALARY_INCOME_KEY;
 
 /**
@@ -69,8 +67,8 @@ public class DialogMessage extends Activity {
             }
         });
 
+        EditText income_new =(EditText)dialog.findViewById(R.id.dialog_salary);
+
         dialog.show();
     }
-
-
 }
