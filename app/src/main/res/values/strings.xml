@@ -23,6 +23,7 @@
         <item>Bill</item>
         <item>Enjoy</item>
         <item>Vehicle</item>
+        <item>Food</item>
     </string-array>
     <string name="title_activity_expense_card_view_details">ExpenseCardViewDetails</string>
     <string name="detail_expense_title">Expense Details</string>

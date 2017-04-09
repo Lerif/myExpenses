@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.industries.shins.myexpenses.R;
 import com.industries.shins.myexpenses.entity.Expense;
 import com.industries.shins.myexpenses.holder.ExpenseViewHolder;
+import com.industries.shins.myexpenses.valueObject.ExpenseCategory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,7 +48,11 @@ public class ExpenseAdapter extends RecyclerView.Adapter{
         expenseViewHolder.percentage.setText(String.format("%.2f",expense.getPercentageOfTotalSalary()));
         expenseViewHolder.percentage.append("%");
 
+        setIconDateDue(expense, expenseViewHolder);
+        setCategoryItem(expense, expenseViewHolder);
+    }
 
+    private void setIconDateDue(Expense expense, ExpenseViewHolder expenseViewHolder){
         // To compare dates parsing string to date format
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
         try {
@@ -68,6 +73,33 @@ public class ExpenseAdapter extends RecyclerView.Adapter{
             expenseViewHolder.wasItPaid.setImageResource(R.drawable.unknow_stauts);
         }
     }
+
+    private void setCategoryItem (Expense expense,  ExpenseViewHolder expenseViewHolder){
+
+        switch(expense.getCategory()){
+            case ExpenseCategory.INVESTMENT:{
+                expenseViewHolder.thumbnail.setImageResource(R.drawable.coins);
+                break;
+            }
+            case ExpenseCategory.BILL:{
+                expenseViewHolder.thumbnail.setImageResource(R.drawable.bill);
+                break;
+            }
+            case ExpenseCategory.VEHICLE:{
+                expenseViewHolder.thumbnail.setImageResource(R.drawable.car);
+                break;
+            }
+            case ExpenseCategory.ENJOY:{
+                expenseViewHolder.thumbnail.setImageResource(R.drawable.waste);
+                break;
+            }
+            case ExpenseCategory.FOOD:{
+                expenseViewHolder.thumbnail.setImageResource(R.drawable.food);
+                break;
+            }
+        }
+    }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder (ViewGroup parent, int viewType){

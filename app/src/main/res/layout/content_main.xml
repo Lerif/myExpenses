@@ -94,7 +94,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:clipToPadding="false"
-                android:paddingBottom="160dp">
+                android:paddingBottom="230dp">
             </android.support.v7.widget.RecyclerView>
 
         </LinearLayout>

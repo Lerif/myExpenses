@@ -17,6 +17,7 @@ import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstan
 public class ExpenseViewHolder extends RecyclerView.ViewHolder {
 
     public int id;
+    public ImageView thumbnail;
     public TextView label;
     public TextView category;
     public TextView cost;
@@ -26,12 +27,13 @@ public class ExpenseViewHolder extends RecyclerView.ViewHolder {
 
     public ExpenseViewHolder(View view) {
         super(view);
-        label = (TextView) view.findViewById(R.id.expense_label);
-        category = (TextView) view.findViewById(R.id.expense_category);
-        dateDue = (TextView) view.findViewById(R.id.expense_due_date);
-        cost = (TextView) view.findViewById(R.id.expense_cost);
-        percentage = (TextView) view.findViewById(R.id.expense_percentage);
-        wasItPaid = (ImageView) view.findViewById(R.id.expense_was_paid_icon);
+        this.thumbnail = (ImageView) view.findViewById(R.id.expense_thumbnail);
+        this.label = (TextView) view.findViewById(R.id.expense_label);
+        this.category = (TextView) view.findViewById(R.id.expense_category);
+        this.dateDue = (TextView) view.findViewById(R.id.expense_due_date);
+        this.cost = (TextView) view.findViewById(R.id.expense_cost);
+        this.percentage = (TextView) view.findViewById(R.id.expense_percentage);
+        this.wasItPaid = (ImageView) view.findViewById(R.id.expense_was_paid_icon);
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override

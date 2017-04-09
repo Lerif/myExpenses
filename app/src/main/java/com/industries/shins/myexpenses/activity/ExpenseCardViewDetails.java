@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -19,6 +20,7 @@ import com.industries.shins.myexpenses.MainActivity;
 import com.industries.shins.myexpenses.R;
 import com.industries.shins.myexpenses.entity.Expense;
 import com.industries.shins.myexpenses.repository.ExpenseDataBase;
+import com.industries.shins.myexpenses.valueObject.ExpenseCategory;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -70,14 +72,25 @@ public class ExpenseCardViewDetails extends AppCompatActivity {
 
 
     /*
-    * Reads from db the details of the card to fill in all the information*/
+    * Reads from db the details of the card to fill in all the information
+    */
     private void setAllFields(){
-        Expense retrivedExpense = db.getExpenseWithId(bundle.getInt(EXPENSE_TABLE_COLUMN_ID));
-        label.setText(retrivedExpense.getLabel());
-        //category.setSelection();
-        cost.setText(String.format("%.2f ",retrivedExpense.getCost()));
-        paid.setChecked(retrivedExpense.isWasItPaid());
-        dateDue.setText(retrivedExpense.getDueDate());
+        Expense retrievedExpense = db.getExpenseWithId(bundle.getInt(EXPENSE_TABLE_COLUMN_ID));
+        label.setText(retrievedExpense.getLabel());
+
+        // Get adapter from category array
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.expense_category, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Get position where it matches the category name retrieved with the category array
+        int spinnerPosition = adapter.getPosition(retrievedExpense.getCategory());
+
+        // Set category spinner
+        category.setSelection(spinnerPosition);
+
+        cost.setText(String.format("%.2f ",retrievedExpense.getCost()));
+        paid.setChecked(retrievedExpense.isWasItPaid());
+        dateDue.setText(retrievedExpense.getDueDate());
 
     }
 

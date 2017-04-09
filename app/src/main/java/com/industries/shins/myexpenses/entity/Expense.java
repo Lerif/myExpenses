@@ -14,13 +14,13 @@ public class Expense {
     public String dueDate;
 
     public Expense(String label, String category, double cost, boolean wasItPaid,
-                   float percetageOfTotalSalary, String dateTimeOfAcquisition) {
+                   float percentageOfTotalSalary, String dateTimeOfAcquisition) {
 
         this.label = label;
         this.category = category;
         this.cost = cost;
         this.wasItPaid = wasItPaid;
-        this.percentageOfTotalSalary = percetageOfTotalSalary;
+        this.percentageOfTotalSalary = percentageOfTotalSalary;
         this.dueDate = dateTimeOfAcquisition;
     }
 
