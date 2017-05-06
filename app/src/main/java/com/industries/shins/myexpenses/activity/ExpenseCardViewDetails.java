@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.industries.shins.myexpenses.MainActivity;
 import com.industries.shins.myexpenses.R;
+import com.industries.shins.myexpenses.Utils.DateUtils;
 import com.industries.shins.myexpenses.entity.Expense;
 import com.industries.shins.myexpenses.repository.ExpenseDataBase;
 import com.industries.shins.myexpenses.valueObject.ExpenseCategory;
@@ -26,6 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.EXPENSE_TABLE_COLUMN_ID;
+import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.GET_MONTH;
+import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.GET_YEAR;
 
 public class ExpenseCardViewDetails extends AppCompatActivity {
 
@@ -102,6 +105,8 @@ public class ExpenseCardViewDetails extends AppCompatActivity {
                 return;
             }
 
+            checksOldExpense();
+
             Expense saveExpense = new Expense(label.getText().toString(),
                     category.getSelectedItem().toString(), Float.parseFloat(cost.getText().toString()),
                     paid.isChecked(), 0, dateDue.getText().toString());
@@ -111,6 +116,21 @@ public class ExpenseCardViewDetails extends AppCompatActivity {
             Toast.makeText(ExpenseCardViewDetails.this, R.string.update_successful, Toast.LENGTH_SHORT).show();
         }
     };
+
+
+    // Checks if its an old expense being paid, if it is asks whether the date due(which will be
+    // date paid) needs to be changed.
+    private void checksOldExpense() {
+        DateUtils dateUtils = new DateUtils();
+
+        // Breaking date string from date base
+        String[] expenseDate = dateDue.getText().toString().split("-");
+
+        if((Integer.parseInt(expenseDate[GET_MONTH]) < Integer.parseInt(dateUtils.currentMonth))
+                && (Integer.parseInt(expenseDate[GET_YEAR]) <= Integer.parseInt(dateUtils.currentYear))){
+
+        }
+    }
 
     View.OnClickListener deleteExpenseHandler = new View.OnClickListener() {
         @Override

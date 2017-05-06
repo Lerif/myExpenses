@@ -34,16 +34,17 @@
     <string name="operation_cannot_be_undone">Operation cannot be undone</string>
     <string name="yes">yes</string>
     <string name="cancel">cancel</string>
-    <string name="total_expenses_cost_title">Total expenses cost: </string>
-    <string name="left_to_pay_title">Expenses left to pay: </string>
+    <string name="total_expenses_cost_title">Total Cost: </string>
+    <string name="left_to_pay_title">Expenses Left:</string>
     <string name="change_salary">change salary</string>
     <string name="about">about</string>
     <string name="ok">ok</string>
     <string name="designByFlatIcon">Icons Design from Flaticon</string>
     <string name="salary">salary:</string>
-    <string name="insert_salary">Insira Salario</string>
+    <string name="insert_salary">Income</string>
     <string name="salary_saved">Salary saved</string>
     <string name="total_salary_left_title">Left:</string>
     <string name="salary_not_saved">Salary invalid</string>
     <string name="currency">R$</string>
+    <string name="card_view_filter_title">Filter</string>
 </resources>

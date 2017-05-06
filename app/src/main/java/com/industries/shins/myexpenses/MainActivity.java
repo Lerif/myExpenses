@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.industries.shins.myexpenses.repository.ExpenseDataBase;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.SQL_ERROR;
 import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.NO_SALARY_SAVED;
 import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.PERSONAL_SHARED_PREFERENCES_FILE_NAME;
 import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.SALARY_INCOME_KEY;
@@ -84,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
                 MODE_PRIVATE);
         float totalSalary = sharedPreferences.getFloat(SALARY_INCOME_KEY, NO_SALARY_SAVED);
 
-        expenses = db.getAllExpenses();
+        expenses = db.getCurrentMonthExpenses();
+        expenses.addAll(db.getAllPreviouslyUnpaidExpenses());
 
         for(Expense expense : expenses){
             totalExpenseCost += expense.getCost();
@@ -97,21 +100,26 @@ public class MainActivity extends AppCompatActivity {
 
         leftSalary = totalSalary - totalExpenseCost;
 
-        this.totalLeftPayment.setText(String.format("%.2f", totalLeftPayment));
-        this.totalExpenseCost.setText(String.format("%.2f ",totalExpenseCost));
-
         if(leftSalary > 0) {
             this.leftSalary.setTextColor(Color.GREEN);
         }
         else{
             this.leftSalary.setTextColor(Color.RED);
         }
-        this.leftSalary.setText(String.format("%.2f", leftSalary));
+        this.leftSalary.setText(R.string.currency);
+        this.leftSalary.append(String.format("%.2f", leftSalary));
+
+        this.totalLeftPayment.setText(R.string.currency);
+        this.totalLeftPayment.append(String.format("%.2f", totalLeftPayment));
+
+        this.totalExpenseCost.setText(R.string.currency);
+        this.totalExpenseCost.append(String.format("%.2f ",totalExpenseCost));
 
         // Specifying adapter
         mRecyclerAdapter = new ExpenseAdapter(expenses, MainActivity.this);
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
     }
 
     @Override

@@ -29,10 +29,17 @@ public class ExpenseDataBaseConstants {
     public static final String UPGRADE_TABLE = "DROPE TABLE IF EXISTS " + EXPENSE_TABLE_NAME;
 
     public static final String GET_ALL_EXPENSES_RAW_QUERY = "SELECT * FROM " + EXPENSE_TABLE_NAME;
+
     public static final String GET_EXPENSE_WICH_ID_IS_EQUAL_RAW_QUERY = "SELECT * FROM "
             + EXPENSE_TABLE_NAME
             + " WHERE " + EXPENSE_TABLE_COLUMN_ID + " = " ;
 
+    public static final String GET_ALL_UNPAID_EXPENSES_RAW_QUERY = "SELECT * FROM " +
+            EXPENSE_TABLE_NAME + " WHERE " + EXPENSE_TABLE_COLUMN_PAID + " = " + 0 + " AND " +
+            EXPENSE_TABLE_COLUMN_DUE_DATE + " > ";
+
+    public static final int GET_MONTH = 1;
+    public static final int GET_YEAR = 2;
 
     public static final String SQL_ERROR = "SQL error: ";
 
