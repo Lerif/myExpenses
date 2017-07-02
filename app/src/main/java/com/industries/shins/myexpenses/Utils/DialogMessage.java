@@ -72,25 +72,4 @@ public class DialogMessage extends Activity {
         dialog.show();
     }
 
-    public void dialogOkCancel(int title, final Context context){
-        final Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.dialog_salary);
-        dialog.setTitle(title);
-
-        Button buttonOk = (Button) dialog.findViewById(R.id.dialog_salary_ok);
-        buttonOk.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                return ;
-            }
-        });
-
-        Button buttonCancel = (Button) dialog.findViewById(R.id.dialog_salary_cancel);
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
 }

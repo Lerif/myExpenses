@@ -47,4 +47,8 @@
     <string name="salary_not_saved">Salary invalid</string>
     <string name="currency">R$</string>
     <string name="card_view_filter_title">Filter</string>
+    <string name="date_range_filter">Date Range</string>
+    <string name="from_date">From:</string>
+    <string name="to_date">To:</string>
+    <string name="to">to</string>
 </resources>

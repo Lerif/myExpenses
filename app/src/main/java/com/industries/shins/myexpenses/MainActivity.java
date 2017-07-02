@@ -1,5 +1,6 @@
 package com.industries.shins.myexpenses;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -11,22 +12,26 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.industries.shins.myexpenses.Utils.DateUtils;
 import com.industries.shins.myexpenses.Utils.DialogMessage;
 import com.industries.shins.myexpenses.activity.AddExpense;
 import com.industries.shins.myexpenses.adapters.ExpenseAdapter;
 import com.industries.shins.myexpenses.entity.Expense;
 import com.industries.shins.myexpenses.repository.ExpenseDataBase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.SQL_ERROR;
+import static com.industries.shins.myexpenses.valueObject.DateConstants.DAY_ONE;
 import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.NO_SALARY_SAVED;
 import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.PERSONAL_SHARED_PREFERENCES_FILE_NAME;
 import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.SALARY_INCOME_KEY;
@@ -42,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView leftSalary;
     private ExpenseDataBase db;
     private SharedPreferences sharedPreferences;
+    private Button fromDate;
+    private Button untilDate;
+    private Calendar fromDateCalendar = Calendar.getInstance();
+    private Calendar untilDateCalendar = Calendar.getInstance();
+    private DateUtils dateUtils = new DateUtils();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +73,15 @@ public class MainActivity extends AppCompatActivity {
         totalLeftPayment = (TextView) findViewById(R.id.total_left_payment);
         leftSalary = (TextView) findViewById(R.id.total_salary_left);
 
+        fromDate = (Button) findViewById(R.id.from_date_button);
+        fromDate.setOnClickListener(fromDateHandler);
+        fromDate.setText(DAY_ONE + "-" + dateUtils.currentMonth + "-" + dateUtils.currentYear);
+
+        untilDate = (Button) findViewById(R.id.to_date_button);
+        untilDate.setOnClickListener(untilDateHandler);
+        untilDate.setText(dateUtils.lastDayOfMonth(Integer.parseInt(dateUtils.currentMonth))
+                + "-" + dateUtils.currentMonth + "-" + dateUtils.currentYear);
+
         FloatingActionButton newExpenseBtn = (FloatingActionButton) findViewById(R.id.add_expense);
         newExpenseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,11 +92,57 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    View.OnClickListener fromDateHandler = new View.OnClickListener() {
+
+        DatePickerDialog.OnDateSetListener dateFrom = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                fromDateCalendar = updateCalendar(fromDateCalendar, fromDate, year, month, dayOfMonth);
+                expenses = db.getExpenseInRange(fromDateCalendar, untilDateCalendar);
+                refreshCards();
+            }
+        };
+
+        @Override
+        public void onClick(View v) {
+            new DatePickerDialog(MainActivity.this, dateFrom, fromDateCalendar
+                    .get(Calendar.YEAR), fromDateCalendar.get(Calendar.MONTH),
+                    fromDateCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        }
+    };
+
+
+    View.OnClickListener untilDateHandler = new View.OnClickListener() {
+
+        DatePickerDialog.OnDateSetListener dateTo = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                untilDateCalendar = updateCalendar(untilDateCalendar, untilDate, year, month, dayOfMonth);
+                expenses = db.getExpenseInRange(fromDateCalendar, untilDateCalendar);
+                refreshCards();
+            }
+        };
+
+        @Override
+        public void onClick(View v) {
+            new DatePickerDialog(MainActivity.this, dateTo, untilDateCalendar
+                    .get(Calendar.YEAR), untilDateCalendar.get(Calendar.MONTH),
+                    untilDateCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        }
+    };
+
 
     @Override
     public void onResume(){
         super.onResume();
 
+        expenses = db.getCurrentMonthExpenses();
+        expenses.addAll(db.getAllPreviouslyUnpaidExpenses());
+
+        refreshCards();
+    }
+
+    private void refreshCards(){
         double totalExpenseCost = 0;
         double totalLeftPayment = 0;
         double leftSalary;
@@ -85,9 +150,6 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(PERSONAL_SHARED_PREFERENCES_FILE_NAME,
                 MODE_PRIVATE);
         float totalSalary = sharedPreferences.getFloat(SALARY_INCOME_KEY, NO_SALARY_SAVED);
-
-        expenses = db.getCurrentMonthExpenses();
-        expenses.addAll(db.getAllPreviouslyUnpaidExpenses());
 
         for(Expense expense : expenses){
             totalExpenseCost += expense.getCost();
@@ -119,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerAdapter = new ExpenseAdapter(expenses, MainActivity.this);
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
     }
 
     @Override
@@ -137,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id){
+
             case R.id.action_change_salary:{
                 DialogMessage dialogMessage = new DialogMessage();
                 dialogMessage.insertSalary(R.string.salary, sharedPreferences, MainActivity.this);
@@ -152,5 +214,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Calendar updateCalendar(Calendar calendarToSet, Button buttonToUpdate, int year, int month, int dayOfMonth){
+        calendarToSet.set(Calendar.YEAR, year);
+        calendarToSet.set(Calendar.MONTH, month);
+        calendarToSet.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        updateDateOnButton(buttonToUpdate, calendarToSet);
+
+        return calendarToSet;
+    }
+
+    private void updateDateOnButton(Button date, Calendar dataToUpdate) {
+        String myFormat = "dd-MM-yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
+        date.setText(sdf.format(dataToUpdate.getTime()));
     }
 }

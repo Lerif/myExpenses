@@ -38,6 +38,7 @@ public class ExpenseDataBaseConstants {
             EXPENSE_TABLE_NAME + " WHERE " + EXPENSE_TABLE_COLUMN_PAID + " = " + 0 + " AND " +
             EXPENSE_TABLE_COLUMN_DUE_DATE + " > ";
 
+    public static final int GET_DAY = 0;
     public static final int GET_MONTH = 1;
     public static final int GET_YEAR = 2;
 

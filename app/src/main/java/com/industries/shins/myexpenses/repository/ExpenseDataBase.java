@@ -10,10 +10,9 @@ import android.util.Log;
 import com.industries.shins.myexpenses.Utils.DateUtils;
 import com.industries.shins.myexpenses.entity.Expense;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.CREATE_TABLE;
@@ -28,7 +27,7 @@ import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstan
 import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.EXPENSE_TABLE_COLUMN_PAID;
 import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.EXPENSE_TABLE_NAME;
 import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.GET_ALL_EXPENSES_RAW_QUERY;
-import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.GET_ALL_UNPAID_EXPENSES_RAW_QUERY;
+import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.GET_DAY;
 import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.GET_EXPENSE_WICH_ID_IS_EQUAL_RAW_QUERY;
 import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.GET_MONTH;
 import static com.industries.shins.myexpenses.valueObject.ExpenseDataBaseConstants.GET_YEAR;
@@ -216,5 +215,90 @@ public class ExpenseDataBase extends SQLiteOpenHelper {
 
         return  monthExpenses;
     }
+
+    public List<Expense> getExpensesStartingFrom(Calendar fromDate){
+        List<Expense> rangeExpenses = new ArrayList<Expense>();
+
+        for(Expense expense : getAllExpenses()){
+
+            // Breaking date string from expense in data base
+            String[] expenseDateInDB = expense.getDueDate().split("-");
+
+            // Checking if expense year is greater than searched year
+            if((Integer.parseInt(expenseDateInDB[GET_YEAR]) > (fromDate.get(Calendar.YEAR)))){
+                rangeExpenses.add(expense);
+            }
+            // Checking if expense is from same year, and if month is greater than searched month
+            // +1 because calendar month starts at 0
+            else if((Integer.parseInt(expenseDateInDB[GET_YEAR]) == (fromDate.get(Calendar.YEAR)))
+                    && (Integer.parseInt(expenseDateInDB[GET_MONTH]) > (fromDate.get(Calendar.MONTH) + 1))){
+                rangeExpenses.add(expense);
+
+            }
+            // Checking if expense is from same year and month, and if day is greater than searched day
+            // +1 because calendar month starts at 0
+            else if ((Integer.parseInt(expenseDateInDB[GET_YEAR]) == (fromDate.get(Calendar.YEAR)))
+                    && (Integer.parseInt(expenseDateInDB[GET_MONTH]) == (fromDate.get(Calendar.MONTH) + 1))
+                    && (Integer.parseInt(expenseDateInDB[GET_DAY]) >= (fromDate.get(Calendar.DAY_OF_MONTH)))){
+                rangeExpenses.add(expense);
+            }
+
+        }
+
+
+        return rangeExpenses;
+    }
+
+    public List<Expense> getExpensesUntil(Calendar untilDate){
+        List<Expense> rangeExpenses = new ArrayList<Expense>();
+
+        for(Expense expense : getAllExpenses()){
+            // Breaking date string from expense in date base
+            String[] expenseDateInDB = expense.getDueDate().split("-");
+
+            // Checking if expense year is before than searched year
+            if((Integer.parseInt(expenseDateInDB[GET_YEAR]) > (untilDate.get(Calendar.YEAR)))){
+                rangeExpenses.add(expense);
+            }
+            // Checking if expense is from same year, and if month is before than searched month
+            // +1 because calendar month starts at 0
+            else if((Integer.parseInt(expenseDateInDB[GET_YEAR]) == (untilDate.get(Calendar.YEAR)))
+                    && (Integer.parseInt(expenseDateInDB[GET_MONTH]) < (untilDate.get(Calendar.MONTH) + 1))){
+                rangeExpenses.add(expense);
+
+            }
+            // Checking if expense is from same year and month, and if day is before than searched day
+            // +1 because calendar month starts at 0
+            else if ((Integer.parseInt(expenseDateInDB[GET_YEAR]) == (untilDate.get(Calendar.YEAR)))
+                    && (Integer.parseInt(expenseDateInDB[GET_MONTH]) == (untilDate.get(Calendar.MONTH) + 1))
+                    && (Integer.parseInt(expenseDateInDB[GET_DAY]) <= (untilDate.get(Calendar.DAY_OF_MONTH)))){
+                rangeExpenses.add(expense);
+            }
+        }
+
+        return rangeExpenses;
+    }
+
+    public List<Expense> getExpenseInRange(Calendar fromDate, Calendar toDate){
+        List<Expense> expensesFromDate = getExpensesStartingFrom(fromDate);
+        List<Expense> expensesToDate = getExpensesUntil(toDate);
+
+        return commonExpense(expensesFromDate, expensesToDate);
+    }
+
+    private List<Expense> commonExpense(List<Expense> expensesPrimary, List<Expense> expensesSecondary){
+        List<Expense> result = new ArrayList<>();
+
+        for(Expense expenseOne : expensesPrimary){
+            for(Expense expenseTwo : expensesSecondary){
+                if(expenseOne.getId() == expenseTwo.getId()) {
+                    result.add(expenseOne);
+                }
+            }
+        }
+
+        return result;
+    }
+
 
 }
