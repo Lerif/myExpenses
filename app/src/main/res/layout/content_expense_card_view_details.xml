@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/detail_expense_title"
-            android:textSize="25dp"
+            android:textSize="25sp"
             android:layout_gravity="right"/>
 
         <!--> LABEL <-->
