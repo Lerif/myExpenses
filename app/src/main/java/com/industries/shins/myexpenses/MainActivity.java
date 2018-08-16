@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.industries.shins.myexpenses.valueObject.DateConstants.DAY_ONE;
 import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.NO_SALARY_SAVED;
 import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.PERSONAL_SHARED_PREFERENCES_FILE_NAME;
@@ -38,17 +41,28 @@ import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConsta
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;      // Handler
+    @BindView(R.id.expenses_cards)
+    RecyclerView mRecyclerView;      // Handler
     private RecyclerView.LayoutManager mRecyclerLayoutManager;
     private RecyclerView.Adapter mRecyclerAdapter;  // Use to display data
     private List<Expense> expenses = new ArrayList<Expense>();
-    private TextView totalExpenseCost;
-    private TextView totalLeftPayment;
-    private TextView leftSalary;
+
+    @BindView(R.id.total_expense_cost)
+    TextView totalExpenseCost;
+
+    @BindView(R.id.total_left_payment)
+    TextView totalLeftPayment;
+
+    @BindView(R.id.total_salary_left)
+    TextView leftSalary;
     private ExpenseDataBase db;
     private SharedPreferences sharedPreferences;
-    private Button fromDate;
-    private Button untilDate;
+
+    @BindView(R.id.from_date_button)
+    Button fromDate;
+
+    @BindView(R.id.to_date_button)
+    Button untilDate;
     private Calendar fromDateCalendar = Calendar.getInstance();
     private Calendar untilDateCalendar = Calendar.getInstance();
     private DateUtils dateUtils = new DateUtils();
@@ -59,25 +73,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
 
         db = new ExpenseDataBase(MainActivity.this);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.expenses_cards);
         mRecyclerView.setHasFixedSize(true);
 
         // Using a linear layout manager
         mRecyclerLayoutManager = new LinearLayoutManager(MainActivity.this);
         mRecyclerView.setLayoutManager(mRecyclerLayoutManager);
 
-        totalExpenseCost = (TextView) findViewById(R.id.total_expense_cost);
-        totalLeftPayment = (TextView) findViewById(R.id.total_left_payment);
-        leftSalary = (TextView) findViewById(R.id.total_salary_left);
 
-        fromDate = (Button) findViewById(R.id.from_date_button);
         fromDate.setOnClickListener(fromDateHandler);
         fromDate.setText(DAY_ONE + "-" + dateUtils.currentMonth + "-" + dateUtils.currentYear);
 
-        untilDate = (Button) findViewById(R.id.to_date_button);
         untilDate.setOnClickListener(untilDateHandler);
         untilDate.setText(dateUtils.lastDayOfMonth(Integer.parseInt(dateUtils.currentMonth))
                 + "-" + dateUtils.currentMonth + "-" + dateUtils.currentYear);
