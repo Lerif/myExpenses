@@ -20,15 +20,29 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class AddExpense extends AppCompatActivity {
 
-    private Button addExpense;
-    private EditText label;
-    private Spinner category;
-    private EditText cost;
-    private CheckBox paid;
-    private Button datePaid;
-    private Calendar calendar = Calendar.getInstance();
+    @BindView(R.id.add_expense_confirm_button)
+    EditText label;
+
+    @BindView(R.id.add_expense_category)
+    Spinner category;
+
+    @BindView(R.id.add_expense_cost)
+    EditText cost;
+
+    @BindView(R.id.add_expense_paid)
+    CheckBox paid;
+
+    @BindView(R.id.add_expense_date)
+    Button datePaid;
+
+    Calendar calendar = Calendar.getInstance();
+
     private ExpenseDataBase db;
 
 
@@ -37,39 +51,29 @@ public class AddExpense extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
 
+        ButterKnife.bind(this);
+
         db = new ExpenseDataBase(AddExpense.this);
 
-        addExpense = (Button) findViewById(R.id.add_expense_confirm_button);
-        addExpense.setOnClickListener(addExpenseHandler);
-
-        // Getting all fields
-        label = (EditText) findViewById(R.id.add_expense_label);
-        category = (Spinner) findViewById(R.id.add_expense_category);
-        cost = (EditText)findViewById(R.id.add_expense_cost);
-        paid = (CheckBox)findViewById(R.id.add_expense_paid);
-
-        datePaid = (Button) findViewById(R.id.add_expense_date);
         datePaid.setText(currentDateTime());
         datePaid.setOnClickListener(datePaidHandler);
     }
 
-
-    View.OnClickListener addExpenseHandler = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // Checks if an obliged field is empty
-            if(!verifyObligedFields()){
-                return;
-            }
-
-            Expense saveExpense = new Expense(label.getText().toString(),
-                    category.getSelectedItem().toString(), Float.parseFloat(cost.getText().toString()),
-                    paid.isChecked(), 0, datePaid.getText().toString());
-            db.saveExpense(saveExpense);
-            clearAllFields();
-            Toast.makeText(AddExpense.this, R.string.save_successful, Toast.LENGTH_SHORT).show();
+    @OnClick(R.id.add_expense_confirm_button)
+    public void confirmExpense(){
+        // Checks if an obliged field is empty
+        if(!verifyObligedFields()){
+            return;
         }
-    };
+
+        Expense saveExpense = new Expense(label.getText().toString(),
+                category.getSelectedItem().toString(), Float.parseFloat(cost.getText().toString()),
+                paid.isChecked(), 0, datePaid.getText().toString());
+        db.saveExpense(saveExpense);
+        clearAllFields();
+        Toast.makeText(AddExpense.this, R.string.save_successful, Toast.LENGTH_SHORT).show();
+    }
+
 
     /**
      * Verify all fields that cannot be empty

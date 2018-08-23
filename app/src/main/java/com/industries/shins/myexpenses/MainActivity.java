@@ -33,6 +33,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.industries.shins.myexpenses.valueObject.DateConstants.DAY_ONE;
 import static com.industries.shins.myexpenses.valueObject.PersonalDataBaseConstants.NO_SALARY_SAVED;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.expenses_cards)
     RecyclerView mRecyclerView;      // Handler
+
     private RecyclerView.LayoutManager mRecyclerLayoutManager;
     private RecyclerView.Adapter mRecyclerAdapter;  // Use to display data
     private List<Expense> expenses = new ArrayList<Expense>();
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.to_date_button)
     Button untilDate;
+
     private Calendar fromDateCalendar = Calendar.getInstance();
     private Calendar untilDateCalendar = Calendar.getInstance();
     private DateUtils dateUtils = new DateUtils();
@@ -100,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     View.OnClickListener fromDateHandler = new View.OnClickListener() {
 
         DatePickerDialog.OnDateSetListener dateFrom = new DatePickerDialog.OnDateSetListener() {
@@ -118,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
                     fromDateCalendar.get(Calendar.DAY_OF_MONTH)).show();
         }
     };
-
 
     View.OnClickListener untilDateHandler = new View.OnClickListener() {
 
