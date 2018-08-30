@@ -26,7 +26,7 @@ import butterknife.OnClick;
 
 public class AddExpense extends AppCompatActivity {
 
-    @BindView(R.id.add_expense_confirm_button)
+    @BindView(R.id.add_expense_label)
     EditText label;
 
     @BindView(R.id.add_expense_category)
@@ -77,7 +77,7 @@ public class AddExpense extends AppCompatActivity {
 
     /**
      * Verify all fields that cannot be empty
-     * If there is an emprty field returns false
+     * If there is an empty field returns false
      * If all fields are filled return true
      */
     private boolean verifyObligedFields() {

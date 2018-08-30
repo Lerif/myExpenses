@@ -242,4 +242,10 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
         date.setText(sdf.format(dataToUpdate.getTime()));
     }
+
+    @Override
+    public void onDestroy(){
+       super.onDestroy();
+    }
+
 }
